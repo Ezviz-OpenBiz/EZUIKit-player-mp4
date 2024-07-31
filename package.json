@@ -1,0 +1,37 @@
+{
+  "name": "@ezuikit/player-mp4",
+  "version": "0.1.0-beta.1",
+  "description": "mp4播放器",
+  "main": "dist/index.js",
+  "umd": "dist/index.umd.js",
+  "types": "dist/types/index.d.ts",
+  "module": "dist/index.esm.js",
+  "scripts": {
+    "dev": "npm run clean && cross-env NODE_ENV=development rollup --config rollup.config.js --bundleConfigAsCjs --watch",
+    "build": "npm run clean && cross-env NODE_ENV=production rollup --config rollup.config.js --bundleConfigAsCjs",
+    "test": "jest",
+    "prebuild": "npm run clean",
+    "clean": "rimraf docs dist coverage",
+    "lint": "eslint .",
+    "fmt": "prettier --write \"packages/**/src/**/*.{js,ts,json,md}\"",
+    "docs": "typedoc --tsconfig typedoc.config.js --exclude **/*.js"
+  },
+  "files": [
+    "dist",
+    "!dist/**/*.js.map"
+  ],
+  "keywords": [],
+  "author": "Ezviz-OpenBiz",
+  "license": "MIT",
+  "dependencies": {
+    "lodash-es": "^4.17.21",
+    "@ezuikit/player-base": "^0.1.0",
+    "@ezuikit/utils-tools": "^1.0.2",
+    "@ezuikit/utils-collect": "^0.1.0"
+  },
+  "devDependencies": {},
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
