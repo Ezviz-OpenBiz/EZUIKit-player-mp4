@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MP4 Player</title>
+    <script src="./index.umd.js"></script>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .root {
+            display: flex;
+            place-content: center;
+            margin-top: 3rem;
+        }
+
+        #container {
+            background: #000;
+            width: 640px;
+            height: 398px;
+        }
+
+        .input {
+            display: flex;
+            margin-top: 10px;
+            color: white;
+            place-content: stretch;
+        }
+
+        .input input {
+            flex: auto;
+        }
+
+        button {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+ 
+    </style>
+</head>
+
+<body class="page">
+    <div class="root">
+        <div class="container-shell">
+            <div id="container"></div>
+            <div class="input">
+                <input autocomplete="on" id="playUrl" value="" />
+                <button id="play">播放</button>
+            </div>
+            <div style="display: inline-flex;">
+                <button id="pause">停止</button>
+                <button id="destroy">销毁</button>
+                <div title="只取小数点后两位，不进位">
+                    <label>音量：</label>
+                    <input placeholder="0~1" id="setVolume" type="number" step="0.01" style="width: 60px" />
+                </div>
+                <button id="getVersion">获取版本</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var $player = document.getElementById('play');
+        var $pause = document.getElementById('pause');
+        var $playHref = document.getElementById('playUrl');
+        var $container = document.getElementById('container');
+        var $destroy = document.getElementById('destroy');
+        var $getVersion = document.getElementById('getVersion');
+
+        var $setDebug = document.getElementById('setDebug')
+        var $setVolume = document.getElementById('setVolume')
+        var $setRotate = document.getElementById('setRotate')
+        var $setScaleMode = document.getElementById('setScaleMode')
+
+        var player = null;
+
+        function create() {
+            player = new Mp4Player({
+                id: "container",
+                url: $playHref.value,
+                debug: true
+            });
+            player.on("error", (msg) => {console.error(msg)})
+        }
+
+        $player.addEventListener('click', function () {
+            var href = $playHref.value;
+
+            if (player) {
+                player.destroy()
+                player = null
+            }
+            
+            if (href) {
+                create()
+                player.play();
+            }
+        }, false)
+
+
+        $pause.addEventListener('click', function () {
+            if (player) player.pause();
+        })
+
+        $destroy.addEventListener('click', function () {
+            if (player) {
+                player.destroy();
+                player = null
+            }
+        })
+
+        $getVersion.addEventListener("click", () => {
+            if (player) {
+                console.log(player.getVersion())
+            }
+        })
+
+        $setVolume.addEventListener('blur', (e) => {
+            if (player) {
+                player.setVolume(e.target.value)
+            }
+        })
+
+    </script>
+
+</body>
+
+</html>
