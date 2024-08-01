@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@ezuikit/player-mp4':
-    specifier: ^0.1.0-beta.2
-    version: 0.1.0-beta.2
+    specifier: ^0.1.0
+    version: 0.1.0
 
 devDependencies:
   http-server:
@@ -28,8 +28,8 @@ packages:
       ua-parser-js: 1.0.37
     dev: false
 
-  /@ezuikit/player-mp4@0.1.0-beta.2:
-    resolution: {integrity: sha512-W8zGeVoL499xMuxovNDIdAk7ND70Mf1S/521fS1IMVBAB0OJxyK6makcKZXFggziFgJPcDGMjwQqitiDxdOvBA==}
+  /@ezuikit/player-mp4@0.1.0:
+    resolution: {integrity: sha512-TT+JyrpY11akyo+1eMcdPhgrgi98ZB1EHS2WjdIGultJYTHWMS+k9+yX0d0Sx5x9ABmWe8zCX4kebvQ8tYrInA==}
     dependencies:
       '@ezuikit/player-base': 0.1.0
       '@ezuikit/utils-collect': 0.1.0
