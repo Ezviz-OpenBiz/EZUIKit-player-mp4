@@ -1,18 +1,16 @@
 <script setup>
 import { onMounted } from 'vue'
-import EzuikitFlv from 'ezuikit-flv'
+import Mp4Player from '@ezuikit/player-mp4'
 
 let player = null
 
 onMounted(() => {
-  player = new EzuikitFlv({
-    container: document.getElementById('container'),
-    debug: true,
-    url: 'https://test12flow.ys7.com:443/v3/openlive/C91672728_1_2.flv?expire=1724231462&id=615956453163966465&t=3edca10be26e834f298923d4114bf9467d9778a7e0d1fa02342846031545b909&ev=100',
-    useMSE: true,
-    decoder: 'decoder.js' // 软解解码资源 （wasm 要和js 在同一个文件夹中）
+  // 默认自动播放
+  player = new Mp4Player({
+    id: 'container',
+    url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
   })
-  player.play()
+  // player.play()
 })
 </script>
 
