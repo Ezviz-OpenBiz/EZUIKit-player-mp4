@@ -1,32 +1,32 @@
-import './Player.css';
-import { useCallback, useEffect, useRef } from 'react';
-import EzuikitFlv from 'ezuikit-flv';
+import "./Player.css";
+import { useCallback, useEffect, useRef } from "react";
+import Mp4Player from "@ezuikit/player-mp4";
 
 function Player() {
+  /** @type {React.MutableRefObject<Mp4Player>} */
   const playerRef = useRef();
   const urlRef = useRef();
   const containerRef = useRef();
   const volumeRef = useRef();
 
   useEffect(() => {
-    createPlayer();
-    volumeRef.current.addEventListener('blur', (e) => {
+    volumeRef.current.addEventListener("blur", (e) => {
       if (playerRef.current) {
-        let value = (e.target.value || '').trim();
-        if (value === '') {
-          console.error('音量为空');
+        let value = (e.target.value || "").trim();
+        if (value === "") {
+          console.error("音量为空");
           return;
         }
         value = Number(value);
         if (value > 1 || value < 0) {
-          console.error('音量设置错误， 取值范围在[0,1]');
+          console.error("音量设置错误， 取值范围在[0,1]");
           return;
         }
 
-        value = parseInt((value * 100 + '').split('.')[0]) / 100; // 不使用 toFixed 是为了避免四舍五入问题
+        value = parseInt((value * 100 + "").split(".")[0]) / 100; // 不使用 toFixed 是为了避免四舍五入问题
         playerRef.current.setVolume(value);
       } else {
-        console.log('player 未初始化');
+        console.log("player 未初始化");
       }
     });
   }, []);
@@ -34,24 +34,30 @@ function Player() {
   const createPlayer = () => {
     const url = urlRef.current.value;
     if (!playerRef.current) {
-      playerRef.current = new EzuikitFlv({
-        container: containerRef.current,
-        debug: true,
+      // 默认没有声音， 浏览器的限制， 用户自动触发
+      playerRef.current = new Mp4Player({
+        id: "player-container",
         url,
-        useMSE: true,
-        decoder: 'decoder.js' // 软解解码资源 （wasm 要和js 在同一个文件夹中）
       });
-      playerRef.current.play();
+
+      window.player = playerRef.current;
     }
   };
 
-  const handlePlay = useCallback(() => {
+  const handleInit = useCallback(() => {
     if (playerRef.current) {
       playerRef.current.destroy();
       playerRef.current = null;
-      createPlayer();
+    }
+    createPlayer();
+  }, []);
+
+  const handlePlay = useCallback(() => {
+    if (playerRef.current) {
+      playerRef.current.play();
     }
   }, []);
+
   const handlePause = useCallback(() => {
     if (playerRef.current) {
       playerRef.current.pause();
@@ -61,30 +67,19 @@ function Player() {
   const handleDestroy = useCallback(() => {
     if (playerRef.current) {
       playerRef.current.destroy();
+      playerRef.current = null;
     }
   }, []);
 
-  const handleOpenSound = useCallback(() => {
+  const handleFullscreen = useCallback(() => {
     if (playerRef.current) {
-      playerRef.current.openSound();
+      playerRef.current.fullscreen();
     }
   }, []);
 
-  const handleCloseSound = useCallback(() => {
+  const handleExitFullscreen = useCallback(() => {
     if (playerRef.current) {
-      playerRef.current.closeSound();
-    }
-  }, []);
-
-  const handleFullScreen = useCallback(() => {
-    if (playerRef.current) {
-      playerRef.current.fullScreen();
-    }
-  }, []);
-
-  const handleCancelFullScreen = useCallback(() => {
-    if (playerRef.current) {
-      playerRef.current.cancelFullScreen();
+      playerRef.current.exitFullscreen();
     }
   }, []);
 
@@ -103,16 +98,15 @@ function Player() {
             style={{ width: 600 }}
             placeholder="输入播放地址"
             ref={urlRef}
-            defaultValue="https://test12flow.ys7.com:443/v3/openlive/C91672728_1_2.flv?expire=1724231462&id=615956453163966465&t=3edca10be26e834f298923d4114bf9467d9778a7e0d1fa02342846031545b909&ev=100"
+            defaultValue="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
           />
         </div>
         <div>
+          <button onClick={handleInit}>初始化</button>
           <button onClick={handlePlay}>播放</button>
           <button onClick={handlePause}>暂停</button>
-          <button onClick={handleOpenSound}>打开声音</button>
-          <button onClick={handleCloseSound}>关闭声音</button>
-          <button onClick={handleFullScreen}>开启全屏</button>
-          <button onClick={handleCancelFullScreen}>取消全屏（ESC）</button>
+          <button onClick={handleFullscreen}>开启全屏</button>
+          <button onClick={handleExitFullscreen}>取消全屏（ESC）</button>
           <button onClick={handleGetVersion}>获取版本</button>
           <button onClick={handleDestroy}>销毁</button>
         </div>
